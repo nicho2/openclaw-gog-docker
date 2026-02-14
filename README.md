@@ -43,3 +43,22 @@ Le `docker-compose.yml` configure:
 - `XDG_DATA_HOME=/home/node/.openclaw/.local/share`
 
 Cela force l’écriture des credentials dans le volume persistant `.openclaw`.
+
+## CI/CD (build & push Docker)
+
+Une pipeline GitHub Actions est fournie dans `.github/workflows/docker-image.yml`.
+
+### Déclenchement
+- `push` sur `main` (build + push)
+- `push` d'un tag `v*` (build + push)
+- `pull_request` vers `main` (build uniquement, sans push)
+- `workflow_dispatch` (manuel)
+
+### Configuration GitHub requise
+- Secrets:
+  - `DOCKERHUB_USERNAME`
+  - `DOCKERHUB_TOKEN`
+- Variable (optionnelle):
+  - `DOCKER_IMAGE_NAME` (ex: `monorg/openclaw-gog`)
+
+Si `DOCKER_IMAGE_NAME` n'est pas défini, l'image cible par défaut est `<owner>/<repo>`.

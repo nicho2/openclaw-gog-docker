@@ -15,6 +15,17 @@ cp .env.example .env
 docker compose up -d --build
 ```
 
+
+## Démarrage avec une image déjà publiée
+
+```bash
+# optionnel: surcharger l'image publiée
+export OPENCLAW_IMAGE=<dockerhub_user>/openclaw-gog-docker:latest
+docker compose -f docker-compose-image.yml up -d
+```
+
+Le fichier `docker-compose-image.yml` n'effectue aucun build local et tire directement l'image définie par `OPENCLAW_IMAGE` (par défaut `openclaw-gog-docker:latest`).
+
 ## Scripts disponibles
 
 - Scripts hôte: `scripts/host/*.sh` (appellent `docker exec ...`)

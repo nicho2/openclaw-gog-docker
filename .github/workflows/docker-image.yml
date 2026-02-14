@@ -40,7 +40,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ vars.DOCKER_IMAGE_NAME || format('{0}/{1}', github.repository_owner, github.event.repository.name) }}
+          images: ${{ vars.DOCKER_IMAGE_NAME || format('{0}/{1}', secrets.DOCKERHUB_USERNAME, github.event.repository.name) }}
           tags: |
             type=ref,event=branch
             type=ref,event=tag

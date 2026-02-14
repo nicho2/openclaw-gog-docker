@@ -4,6 +4,10 @@ FROM alpine/openclaw:latest
 
 SHELL ["/bin/bash", "-lc"]
 
+# L'image de base s'exécute en utilisateur non-root, on passe root
+# pour installer les dépendances système.
+USER root
+
 # Dépendances minimales (la base alpine/openclaw est actuellement Debian-based)
 RUN apt-get update \
  && apt-get install -y --no-install-recommends ca-certificates curl tar \
@@ -32,3 +36,6 @@ RUN set -euo pipefail; \
 # Scripts "in-image" (exécutables dans le conteneur)
 COPY scripts/in-image/ /usr/local/bin/openclaw/
 RUN chmod +x /usr/local/bin/openclaw/*.sh
+
+# Restaurer l'utilisateur applicatif par défaut.
+USER node

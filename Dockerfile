@@ -28,3 +28,7 @@ RUN set -euo pipefail; \
   tar -xzf /tmp/gogcli.tgz -C /usr/local/bin gog; \
   chmod +x /usr/local/bin/gog; \
   /usr/local/bin/gog version
+
+# Scripts "in-image" (exécutables dans le conteneur)
+COPY scripts/in-image/ /usr/local/bin/openclaw/
+RUN chmod +x /usr/local/bin/openclaw/*.sh

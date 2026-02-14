@@ -15,16 +15,31 @@ cp .env.example .env
 docker compose up -d --build
 ```
 
-## Authentification Google
+## Scripts disponibles
+
+- Scripts hôte: `scripts/host/*.sh` (appellent `docker exec ...`)
+- Scripts in-image: `scripts/in-image/*.sh` (copiés dans `/usr/local/bin/openclaw/`)
+
+## Utilisation depuis l’hôte
 
 ```bash
-./scripts/gog-auth.sh
-# ou pour un serveur headless
-./scripts/gog-auth-remote.sh
+./scripts/host/sanity-check.sh
+./scripts/host/gog-auth-remote.sh
+./scripts/host/calendar-today.sh
 ```
 
-## Vérification rapide
+## Utilisation depuis le conteneur
 
 ```bash
-./scripts/sanity-check.sh
+docker exec -it openclaw-gateway bash
+/usr/local/bin/openclaw/sanity-check.sh
+/usr/local/bin/openclaw/gog-auth-remote.sh
 ```
+
+## Persistance des tokens gog
+
+Le `docker-compose.yml` configure:
+- `XDG_CONFIG_HOME=/home/node/.openclaw/.config`
+- `XDG_DATA_HOME=/home/node/.openclaw/.local/share`
+
+Cela force l’écriture des credentials dans le volume persistant `.openclaw`.

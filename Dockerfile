@@ -33,9 +33,9 @@ RUN set -euo pipefail; \
   chmod +x /usr/local/bin/gog; \
   /usr/local/bin/gog version
 
-# Scripts "in-image" (exécutables dans le conteneur)
-COPY scripts/in-image/ /usr/local/bin/openclaw/
-RUN chmod +x /usr/local/bin/openclaw/*.sh
+# Scripts "in-image"
+COPY scripts/in-image/ /usr/local/bin/openclaw-scripts/
+RUN chmod +x /usr/local/bin/openclaw-scripts/*.sh
 
 # Wrapper openclaw -> node /app/dist/index.js
 RUN cat >/usr/local/bin/openclaw <<'EOF'
@@ -54,7 +54,6 @@ else
 fi
 EOF
 RUN chmod +x /usr/local/bin/openclaw
-
 
 # Restaurer l'utilisateur applicatif par défaut.
 USER node

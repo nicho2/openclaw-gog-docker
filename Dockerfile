@@ -37,5 +37,24 @@ RUN set -euo pipefail; \
 COPY scripts/in-image/ /usr/local/bin/openclaw/
 RUN chmod +x /usr/local/bin/openclaw/*.sh
 
+# Exposer une commande "openclaw" même si la CLI n'est pas bundle dans l'image
+RUN cat >/usr/local/bin/openclaw <<'EOF' \
+ && chmod +x /usr/local/bin/openclaw
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Ajuste le chemin si nécessaire (selon l'image, dist peut être /app/dist)
+if [[ -f /app/dist/index.js ]]; then
+  exec node /app/dist/index.js "$@"
+elif [[ -f /app/dist/index.mjs ]]; then
+  exec node /app/dist/index.mjs "$@"
+elif [[ -f /app/dist/index.cjs ]]; then
+  exec node /app/dist/index.cjs "$@"
+else
+  echo "OpenClaw dist introuvable dans /app/dist (index.js|mjs|cjs)" >&2
+  exit 1
+fi
+EOF
+
 # Restaurer l'utilisateur applicatif par défaut.
 USER node

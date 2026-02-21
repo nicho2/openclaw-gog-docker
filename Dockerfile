@@ -9,10 +9,28 @@ SHELL ["/bin/bash", "-lc"]
 USER root
 
 # Dépendances minimales (la base alpine/openclaw est actuellement Debian-based)
-RUN apt-get update \
- && apt-get install -y --no-install-recommends ca-certificates curl tar \
- && rm -rf /var/lib/apt/lists/* \
- && update-ca-certificates
+
+RUN set -eux; \
+    apt-get update; \
+    apt-get install -y --no-install-recommends \
+      ca-certificates \
+      curl \
+      tar \
+      git \
+      openssh-client \
+      gnupg; \
+    mkdir -p /etc/apt/keyrings; \
+    curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg \
+      | dd of=/etc/apt/keyrings/githubcli-archive-keyring.gpg; \
+    chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg; \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" \
+      > /etc/apt/sources.list.d/github-cli.list; \
+    apt-get update; \
+    apt-get install -y --no-install-recommends gh; \
+    rm -rf /var/lib/apt/lists/*; \
+    update-ca-certificates; \
+    git --version; \
+    gh --version
 
 # Version gogcli (sans le "v") ex: 0.10.0
 ARG GOG_VERSION=0.10.0
